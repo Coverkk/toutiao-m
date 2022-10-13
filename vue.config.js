@@ -2,7 +2,7 @@
 const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
   transpileDependencies: true,
-  // lintOnSave : false,
+  lintOnSave: false,
   devServer: {
     port: 80 // 设置端口号
     // open : true // 浏览器默认打开
