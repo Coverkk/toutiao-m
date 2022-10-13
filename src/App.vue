@@ -1,6 +1,9 @@
 <template>
   <div id="app">
-    <router-view/>
+    <router-view />
+    <div>
+      <i class="iconfont icon-shouye"></i>
+    </div>
   </div>
 </template>
 <script>
@@ -10,4 +13,5 @@ export default {
 </script>
 
 <style lang="less">
+
 </style>
