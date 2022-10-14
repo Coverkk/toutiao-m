@@ -14,7 +14,7 @@
       通过 animated 属性可以开启切换标签内容时的转场动画。
       通过 swipeable 属性可以开启滑动切换标签页。
      -->
-    <van-tabs v-model="active" animated swipeable>
+    <van-tabs class="channer-tab" v-model="active" animated swipeable>
       <van-tab title="标签 1">内容 1</van-tab>
       <van-tab title="标签 2">内容 2</van-tab>
       <van-tab title="标签 3">内容 3</van-tab>
@@ -47,6 +47,29 @@ export default {
 
     .van-icon {
       font-size: 32px;
+    }
+  }
+  /deep/ .channer-tab {
+    .van-tabs__wrap {
+      height: 82px;
+      .van-tab--active {
+        color: #333;
+      }
+      .van-tab {
+      min-width: 200px;
+      border-right: 1px solid #edeff3;
+      font-size: 30px;
+      color: #777;
+      }
+      .van-tabs__nav {
+        padding-bottom: 0;
+      }
+      .van-tabs__line {
+        bottom: 8px;
+        width: 31px;
+        height: 6px;
+        background-color: #3296fa;
+      }
     }
   }
 }
