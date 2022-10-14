@@ -17,7 +17,9 @@
     <van-tabs class="channel-tab" v-model="active" animated swipeable>
       <van-tab :title="obj.name"
       v-for="obj in channels"
-      :key="obj.id">{{obj.name}}</van-tab>
+      :key="obj.id">
+        <ArticleList :channel="obj"></ArticleList>
+      </van-tab>
       <div slot="nav-right" class="placeholder"></div>
       <div slot="nav-right" class="hamburger-btn">
         <i class="iconfont icon-gengduo"></i>
@@ -28,8 +30,8 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import { getUserChannelsAPI } from '@/api'
+import ArticleList from './components/article-list.vue'
 export default {
   data () {
     return {
@@ -37,27 +39,23 @@ export default {
       channels: [] // 用户频道列表
     }
   },
-  computed: {
-    ...mapState(['user'])
-  },
-  // 组件初始化之后，如果用户已登录，获取用户频道列表
+  // 组件初始化之后，获取用户频道列表
   created () {
-    if (this.user) {
-      this.getUserChannels()
-    }
+    this.getUserChannels()
   },
   methods: {
     // 获取用户频道列表
     async getUserChannels () {
       try {
-        const { data: { data: { channels } } } = await getUserChannelsAPI()
+        const { data: { data: { channels } } } = await getUserChannelsAPI();
         // console.log(res)
         this.channels = channels // 保存用户频道列表
       } catch (err) {
         this.$toast('获取用户频道失败')
       }
     }
-  }
+  },
+  components: { ArticleList }
 }
 </script>
 
