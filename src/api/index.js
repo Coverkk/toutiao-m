@@ -1,4 +1,5 @@
 import { login, sendSms, getUserInfo, getUserChannels } from './user'
+import { getChannelArticles } from './articles'
 
 // user.js
 // 用户登录接口
@@ -9,3 +10,7 @@ export const sendSmsAPI = sendSms
 export const getUserInfoAPI = getUserInfo
 // 获取用户频道
 export const getUserChannelsAPI = getUserChannels
+
+// articles.js
+// 获取频道推荐新闻列表
+export const getChannelArticlesAPI = getChannelArticles

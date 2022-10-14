@@ -61,6 +61,7 @@ export default {
 
 <style scoped lang="less">
 .home-container {
+  padding-bottom: 100px;
   .search-btn {
     width: 400px;
     height: 64px;
