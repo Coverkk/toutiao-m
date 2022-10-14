@@ -12,6 +12,7 @@ export const setItem = (key, value) => {
 // 获取数据
 export const getItem = key => {
   const data = window.localStorage.getItem(key)
+  // console.log(data)
   try {
     return JSON.parse(data)
   } catch {

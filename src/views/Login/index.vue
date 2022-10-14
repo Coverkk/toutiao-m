@@ -1,7 +1,7 @@
 <template>
   <div class="login-container">
     <!-- 登录navbar -->
-    <van-nav-bar class="page-nav-bar" title="登录" />
+    <van-nav-bar class="page-nav-bar" title="登录" left-arrow @click-left="$router.back()" />
     <!-- 登录navbar -->
 
     <!-- 登录表单 -->
@@ -100,8 +100,10 @@ export default {
       // 3. 根据表单请求登录
       try {
         const { data } = await loginAPI(user)
-        this.$store.commit('setUser', data)
+        this.$store.commit('setUser', data.data)
         this.$toast.success('登录成功')
+        // 登录成功，跳转到我的页面
+        this.$router.push('/layout/my')
       } catch (err) {
         if (err.response.status === 400) { // 手机号或验证码错误导致登录失败
           this.$toast.fail('手机号或验证码错误')
