@@ -15,12 +15,9 @@
       通过 swipeable 属性可以开启滑动切换标签页。
      -->
     <van-tabs class="channel-tab" v-model="active" animated swipeable>
-      <van-tab title="标签 1">内容 1</van-tab>
-      <van-tab title="标签 2">内容 2</van-tab>
-      <van-tab title="标签 3">内容 3</van-tab>
-      <van-tab title="标签 4">内容 4</van-tab>
-      <van-tab title="标签 4">内容 4</van-tab>
-      <van-tab title="标签 4">内容 4</van-tab>
+      <van-tab :title="obj.name"
+      v-for="obj in channels"
+      :key="obj.id">{{obj.name}}</van-tab>
       <div slot="nav-right" class="placeholder"></div>
       <div slot="nav-right" class="hamburger-btn">
         <i class="iconfont icon-gengduo"></i>
@@ -31,10 +28,34 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+import { getUserChannelsAPI } from '@/api'
 export default {
   data () {
     return {
-      active: 0
+      active: 0,
+      channels: [] // 用户频道列表
+    }
+  },
+  computed: {
+    ...mapState(['user'])
+  },
+  // 组件初始化之后，如果用户已登录，获取用户频道列表
+  created () {
+    if (this.user) {
+      this.getUserChannels()
+    }
+  },
+  methods: {
+    // 获取用户频道列表
+    async getUserChannels () {
+      try {
+        const { data: { data: { channels } } } = await getUserChannelsAPI()
+        // console.log(res)
+        this.channels = channels // 保存用户频道列表
+      } catch (err) {
+        this.$toast('获取用户频道失败')
+      }
     }
   }
 }
