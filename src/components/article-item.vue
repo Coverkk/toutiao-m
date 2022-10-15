@@ -18,7 +18,7 @@
       <div class="label-info-wrap">
         <span>{{ article.aut_name }}</span>
         <span>{{ article.comm_count }}</span>
-        <span>{{ article.pubdate }}</span>
+        <span>{{ article.pubdate | relativeTime(article.pubdate) }}</span>
       </div>
     </template>
     <template #default v-if="article.cover.type === 1">
