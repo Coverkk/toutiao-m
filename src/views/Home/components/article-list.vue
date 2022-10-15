@@ -11,15 +11,20 @@
         :error.sync="error"
         error-text="请求失败，点击重新加载"
         >
-            <van-cell v-for="article in list" :key="article.art_id" :title="article.title" />
+            <!-- <van-cell v-for="article in list" :key="article.art_id" :title="article.title" /> -->
+            <ArticleItem v-for="article in list" :key="article.art_id" :article="article"></ArticleItem>
         </van-list>
       </van-pull-refresh>
     </div>
 </template>
 
 <script>
+import ArticleItem from '@/components/article-item.vue'
 import { getChannelArticlesAPI } from '@/api'
 export default {
+  components: {
+    ArticleItem
+  },
   data () {
     return {
       list: [], // 数据列表
