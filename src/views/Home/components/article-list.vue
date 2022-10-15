@@ -25,7 +25,7 @@ export default {
       list: [], // 数据列表
       loading: false, // 监听是否触发触底刷新，false为触发
       finished: false, // 监听数据是否全部加载完成
-      timestamp: Date.now(), // 时间戳，用来请求数据
+      timestamp: null, // 时间戳，用来请求数据
       error: false, // 新闻列表加载状态，false为可以正常加载
       refreshLoading: false, // 下拉刷新完成状态
       refreshText: '刷新成功'
@@ -46,7 +46,7 @@ export default {
           //   可以把 timestamp 理解为页码
           //   如果请求第一页数据：当前最新时间戳 Date.now
           //   如果请求之后的数据，使用本次接口返回的 pre_time
-          timestamp: this.timestamp // 时间戳，请求新的推荐数据，传当前的时间
+          timestamp: this.timestamp || Date.now() // 时间戳，请求新的推荐数据，传当前的时间
         })
         // console.log(data)
         // 模拟随机失败
@@ -85,13 +85,13 @@ export default {
           timestamp: Date.now() // 时间戳，请求新的推荐数据，传当前的时间
         })
         // 2.把请求结果数据追加到 list数组顶部
-        // this.list = data.results
-        this.list.unshift(...data.results)
+        this.list = data.results
+        // this.list.unshift(...data.results)
+        // 更新时间戳，为后面刷新获取更多数据做准备
+        this.timestamp = data.pre_timestamp
         // 因为下拉刷新，只加载一次，此时获取到的数据，不能铺满列表，触发不了加载更多
         // 需要手动触发加载更多数据的函数
-        // await this.onLoad()
-        // 更新时间戳，为后面刷新获取更多数据做准备
-        // this.timestamp = data.pre_timestamp
+        await this.onLoad()
         // 3. 本次数据加载结束之后要把加载状态设置为结束
         this.refreshLoading = false
         this.refreshText = `刷新成功，刷新了${data.results.length}条数据`
