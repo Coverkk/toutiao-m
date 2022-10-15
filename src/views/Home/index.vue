@@ -21,22 +21,36 @@
         <ArticleList :channel="obj"></ArticleList>
       </van-tab>
       <div slot="nav-right" class="placeholder"></div>
-      <div slot="nav-right" class="hamburger-btn">
+      <div slot="nav-right" class="hamburger-btn" @click="show = true">
         <i class="iconfont icon-gengduo"></i>
       </div>
     </van-tabs>
     <!-- 频道列表 -->
+
+    <!-- 频道编辑弹出层 -->
+    <van-popup
+    v-model="show"
+    closeable
+    close-icon-position="top-left"
+    position="bottom"
+    :style="{ height: '100%' }"
+    >
+    <ChannelEdit></ChannelEdit>
+    </van-popup>
+    <!-- 频道编辑弹出层 -->
   </div>
 </template>
 
 <script>
 import { getUserChannelsAPI } from '@/api'
 import ArticleList from './components/article-list.vue'
+import ChannelEdit from './components/channel-edit.vue'
 export default {
   data () {
     return {
       active: 0,
-      channels: [] // 用户频道列表
+      channels: [], // 用户频道列表
+      show: false
     }
   },
   // 组件初始化之后，获取用户频道列表
@@ -55,7 +69,10 @@ export default {
       }
     }
   },
-  components: { ArticleList }
+  components: {
+    ArticleList,
+    ChannelEdit 
+  }
 }
 </script>
 
