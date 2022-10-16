@@ -6,11 +6,18 @@
       <template #title>
         <div class="title-text">我的频道</div>
       </template>
-      <van-button type="danger" plain round size="small" class="my-channel-edit-btn" @click="channelEdit()">编辑</van-button>
+      <van-button type="danger" plain round size="small" class="my-channel-edit-btn" @click="channelEdit()">{{ isClear ? '完成' : '编辑'}}</van-button>
     </van-cell>
     <!-- 我的频道宫格 -->
     <van-grid :gutter="10" class="my-grid">
-      <van-grid-item class="grid-item" icon="clear" v-for="value in 8" :key="value" text="文字" />
+      <van-grid-item class="grid-item"  v-for="(channel , index) in myChannels" :key="channel.id"  >
+        <template #text>
+          <span class="text" :class="{ active: active === index}">{{channel.name}}</span>
+        </template>
+        <template #icon >
+          <i class="van-icon van-icon-clear van-grid-item__icon" v-if="isClear && index != 0"></i>
+        </template>
+      </van-grid-item>
     </van-grid>
     <!-- 我的频道 -->
 
@@ -39,6 +46,16 @@ export default {
     channelEdit () {
       this.isClear = !this.isClear
     }
+  },
+  props: {
+    myChannels: {
+      type: Array,
+      required: true
+    },
+    active: {
+      type: Number,
+      required: true
+    }
   }
 }
 </script>
@@ -61,24 +78,29 @@ export default {
   /deep/ .grid-item {
     width: 160px;
     height: 86px;
-    .van-grid-item__content {
+    .van-grid-item__content{
       white-space: nowrap;
       background-color: #f5f6f7;
-      .van-grid-item__text {
+      .van-grid-item__text, .text {
         font-size: 28px;
         color: #222;
+        margin-top: 0;
+      }
+      .active {
+        color: red;
       }
     }
   }
   /deep/ .my-grid {
-    .van-icon-clear {
+    .van-grid-item__icon-wrapper {
       position: absolute;
       right: -10px;
-      top: -10px;
-      font-size: 30px;
-      color: #cacaca;
+      top: -30px;
       z-index: 2;
-
+      .van-icon-clear {
+        font-size: 30px;
+        color: #cacaca;
+      }
     }
   }
 
@@ -89,9 +111,6 @@ export default {
         .van-icon-plus {
           font-size: 28px;
           margin-right: 6px;
-        }
-        .van-grid-item__text {
-          margin-top: 0;
         }
       }
     }
