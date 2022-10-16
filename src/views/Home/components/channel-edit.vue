@@ -29,22 +29,56 @@
     </van-cell>
     <!-- 频道推荐宫格 -->
     <van-grid :gutter="10" class="recommend-grid">
-      <van-grid-item class="grid-item" icon="plus" v-for="value in 8" :key="value" text="文字" />
+      <van-grid-item @click="addMychannel" class="grid-item" icon="plus" v-for="channel in recommendChannels" :key="channel.id" :text="channel.name" />
     </van-grid>
     <!-- 频道推荐 -->
   </div>
 </template>
 
 <script>
+import { getAllChannelAPI } from '@/api'
 export default {
   data () {
     return {
-      isClear: false
+      isClear: false, // 编辑组件的状态
+      allChannels: []
+    }
+  },
+  computed: {
+    recommendChannels () {
+      const allChannels = this.allChannels
+      // 将用户以添加的频道，从所有频道列表删除
+      // 遍历我的频道列表
+      this.myChannels.forEach(channel => {
+        // 找出和我的频道列表的数据同名的所有频道的索引
+        const index = allChannels.findIndex(obj => obj.id === channel.id)
+        // 将已在我的频道列表存在的数据，从所有频道里删除
+        allChannels.splice(index, 1)
+      })
+      // console.log(this.allChannels)
+      return allChannels
     }
   },
   methods: {
     channelEdit () {
       this.isClear = !this.isClear
+    },
+    addMychannel () {
+      // 添加频道
+    },
+    async getAllChannels () {
+      // 获取所有频道列表
+      try {
+        const { data: { data: { channels } } } = await getAllChannelAPI()
+        // const data = await getAllChannelAPI()
+        // console.log(data)
+        // const channels = data.data.data.channels
+        // console.log(channels)
+        // 将获取到的数据，放到allChannels数组
+        this.allChannels = channels
+      } catch (err) {
+        console.log('请求所有频道列表失败', err)
+      }
     }
   },
   props: {
@@ -56,6 +90,10 @@ export default {
       type: Number,
       required: true
     }
+  },
+  created () {
+    // 在组件初始化完成之后，获取所有频道列表
+    this.getAllChannels()
   }
 }
 </script>
