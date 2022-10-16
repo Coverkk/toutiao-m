@@ -71,7 +71,7 @@ export default {
   },
   components: {
     ArticleList,
-    ChannelEdit 
+    ChannelEdit
   }
 }
 </script>
