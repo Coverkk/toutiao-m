@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { getItem, setItem, removeItem} from '@/utils/storage'
+import { getItem, setItem, removeItem } from '@/utils/storage'
 
 Vue.use(Vuex)
 
