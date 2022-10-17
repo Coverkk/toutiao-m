@@ -43,6 +43,8 @@
 
 <script>
 import { getUserChannelsAPI } from '@/api'
+import { mapState } from 'vuex'
+import { getItem } from '@/utils/storage'
 import ArticleList from './components/article-list.vue'
 import ChannelEdit from './components/channel-edit.vue'
 export default {
@@ -55,13 +57,17 @@ export default {
   },
   // 组件初始化之后，获取用户频道列表
   created () {
-    this.getUserChannels()
+    if (this.user) {
+      this.getUserChannels()
+    } else {
+      this.channels = getItem('toutiao_myChannels')
+    }
   },
   methods: {
     // 获取用户频道列表
     async getUserChannels () {
       try {
-        const { data: { data: { channels } } } = await getUserChannelsAPI();
+        const { data: { data: { channels } } } = await getUserChannelsAPI()
         // console.log(res)
         this.channels = channels // 保存用户频道列表
       } catch (err) {
@@ -77,6 +83,9 @@ export default {
   components: {
     ArticleList,
     ChannelEdit
+  },
+  computed: {
+    ...mapState(['user'])
   }
 }
 </script>

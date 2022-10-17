@@ -1,6 +1,6 @@
 import { login, sendSms, getUserInfo, getUserChannels } from './user'
 import { getChannelArticles } from './articles'
-import { getAllChannel } from './channel'
+import { getAllChannel, addUserChannel, delUserChannel } from './channel'
 
 // user.js
 // 用户登录接口
@@ -19,3 +19,7 @@ export const getChannelArticlesAPI = getChannelArticles
 // channel.js
 // 获取所有频道列表
 export const getAllChannelAPI = getAllChannel
+// 添加用户频道
+export const addUserChannelAPI = addUserChannel
+// 删除指定用户频道
+export const delUserChannelAPI = delUserChannel

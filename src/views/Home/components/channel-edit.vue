@@ -40,7 +40,9 @@
 </template>
 
 <script>
-import { getAllChannelAPI } from '@/api'
+import { getAllChannelAPI, addUserChannelAPI, delUserChannelAPI } from '@/api'
+import { mapState } from 'vuex'
+import { setItem } from '@/utils/storage.js'
 export default {
   data () {
     return {
@@ -67,15 +69,37 @@ export default {
       // })
       // // console.log(this.allChannels)
       // return allChannels
-    }
+    },
+    ...mapState(['user'])
   },
   methods: {
     channelEdit () {
       this.isClear = !this.isClear
     },
-    addMychannel (channel) {
+    async addMychannel (channel) {
       // 添加频道
       this.myChannel.push(channel)
+      // 数据持久化
+      if (this.user) {
+        // 已登录，数据请求接口放到线上
+        // 已登录的添加频道，同步到服务器
+        try {
+          // const data = await addUserChannelAPI({
+          //   id: channel.id,
+          //   seq: this.myChannel.length
+          // })
+          await addUserChannelAPI({
+            id: channel.id,
+            seq: this.myChannel.length // 序号
+          })
+          // console.log(data)
+        } catch (err) {
+          this.$toast('添加失败')
+        }
+      } else {
+        // 未登录，数据保存到本地
+        setItem('toutiao_myChannels', this.myChannel)
+      }
     },
     async getAllChannels () {
       // 获取所有频道列表
@@ -102,15 +126,28 @@ export default {
         if (index <= this.active) {
           this.$emit('changeChannel', this.active - 1)
         }
-        this.delChannel(index)
+        this.delChannel(channel, index)
       } else {
         // 如果是非编辑状态，点击切换到对应频道
         this.$emit('changeChannel', index, false)
       }
     },
-    delChannel (index) {
+    async delChannel (channel, index) {
       // 删除对应频道
       this.myChannel.splice(index, 1)
+      if (this.user) {
+        try {
+          // 如果已登录，则调用后台接口删除对应频道
+          // const data = await delUserChannelAPI(channel.id)
+          await delUserChannelAPI(channel.id)
+          // console.log(data)
+        } catch (err) {
+          this.$toast('删除失败,请稍后重试')
+        }
+      } else {
+        // 如果未登录，则使用新myChannel覆盖本地存储
+        setItem('toutiao_myChannels', this.myChannel)
+      }
     }
   },
   props: {
