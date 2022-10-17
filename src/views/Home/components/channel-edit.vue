@@ -10,12 +10,16 @@
     </van-cell>
     <!-- 我的频道宫格 -->
     <van-grid :gutter="10" class="my-grid">
-      <van-grid-item class="grid-item"  v-for="(channel , index) in myChannels" :key="channel.id"  >
+      <van-grid-item class="grid-item"
+      v-for="(channel , index) in myChannel"
+      :key="channel.id"
+      @click="onMyChannelClick(channel , index)"
+      >
         <template #text>
           <span class="text" :class="{ active: active === index}">{{channel.name}}</span>
         </template>
         <template #icon >
-          <i class="van-icon van-icon-clear van-grid-item__icon" v-if="isClear && index != 0"></i>
+          <i class="van-icon van-icon-clear van-grid-item__icon" v-show="isClear && index != 0"></i>
         </template>
       </van-grid-item>
     </van-grid>
@@ -29,7 +33,7 @@
     </van-cell>
     <!-- 频道推荐宫格 -->
     <van-grid :gutter="10" class="recommend-grid">
-      <van-grid-item @click="addMychannel" class="grid-item" icon="plus" v-for="channel in recommendChannels" :key="channel.id" :text="channel.name" />
+      <van-grid-item @click="addMychannel(channel)" class="grid-item" icon="plus" v-for="channel in recommendChannels" :key="channel.id" :text="channel.name" />
     </van-grid>
     <!-- 频道推荐 -->
   </div>
@@ -41,30 +45,37 @@ export default {
   data () {
     return {
       isClear: false, // 编辑组件的状态
-      allChannels: []
+      allChannels: [],
+      myChannel: this.myChannels
     }
   },
   computed: {
     recommendChannels () {
-      const allChannels = this.allChannels
-      // 将用户以添加的频道，从所有频道列表删除
-      // 遍历我的频道列表
-      this.myChannels.forEach(channel => {
-        // 找出和我的频道列表的数据同名的所有频道的索引
-        const index = allChannels.findIndex(obj => obj.id === channel.id)
-        // 将已在我的频道列表存在的数据，从所有频道里删除
-        allChannels.splice(index, 1)
+      // filter遍历数组，把符合条件的元素放到新数组
+      return this.allChannels.filter(channel => {
+        // 当返回值为true的时候，把channel返回新数组
+        return !this.myChannels.find(obj => obj.id === channel.id)
       })
-      // console.log(this.allChannels)
-      return allChannels
+      // const allChannels = this.allChannels
+      // // 将用户以添加的频道，从所有频道列表删除
+      // // 遍历我的频道列表
+      // this.myChannels.forEach(channel => {
+      //   // 找出和我的频道列表的数据同名的所有频道的索引
+      //   const index = allChannels.findIndex(obj => obj.id === channel.id)
+      //   // 将已在我的频道列表存在的数据，从所有频道里删除
+      //   allChannels.splice(index, 1)
+      // })
+      // // console.log(this.allChannels)
+      // return allChannels
     }
   },
   methods: {
     channelEdit () {
       this.isClear = !this.isClear
     },
-    addMychannel () {
+    addMychannel (channel) {
       // 添加频道
+      this.myChannel.push(channel)
     },
     async getAllChannels () {
       // 获取所有频道列表
@@ -79,6 +90,27 @@ export default {
       } catch (err) {
         console.log('请求所有频道列表失败', err)
       }
+    },
+    onMyChannelClick (channel, index) {
+      if (this.isClear) {
+        // 如果删除的是固定频道，就不删除
+        if (channel.id === 0) {
+          return
+        }
+        // 如果是编辑状态，点击删除对应频道
+        // 删除的时候，如果要删除的频道的索引比当前active小，应该让active - 1，保证触发的频道，前后都是同一个
+        if (index <= this.active) {
+          this.$emit('changeChannel', this.active - 1)
+        }
+        this.delChannel(index)
+      } else {
+        // 如果是非编辑状态，点击切换到对应频道
+        this.$emit('changeChannel', index, false)
+      }
+    },
+    delChannel (index) {
+      // 删除对应频道
+      this.myChannel.splice(index, 1)
     }
   },
   props: {

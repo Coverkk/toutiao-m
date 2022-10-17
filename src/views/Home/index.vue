@@ -35,7 +35,7 @@
     position="bottom"
     :style="{ height: '100%' }"
     >
-    <ChannelEdit :myChannels="channels" :active="active"></ChannelEdit>
+    <ChannelEdit :myChannels="channels" :active="active" @changeChannel="changeChannel"></ChannelEdit>
     </van-popup>
     <!-- 频道编辑弹出层 -->
   </div>
@@ -50,7 +50,7 @@ export default {
     return {
       active: 0,
       channels: [], // 用户频道列表
-      show: false
+      show: false // 控制弹出层是否显示
     }
   },
   // 组件初始化之后，获取用户频道列表
@@ -67,6 +67,11 @@ export default {
       } catch (err) {
         this.$toast('获取用户频道失败')
       }
+    },
+    changeChannel (index, isChannelEdit = true) {
+      // 切换频道
+      this.active = index
+      this.show = isChannelEdit
     }
   },
   components: {
