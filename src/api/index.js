@@ -1,7 +1,7 @@
 import { login, sendSms, getUserInfo, getUserChannels } from './user'
 import { getChannelArticles } from './articles'
 import { getAllChannel, addUserChannel, delUserChannel } from './channel'
-import { searchSuggestion } from './search'
+import { searchSuggestion, searchResult } from './search'
 
 // user.js
 // 用户登录接口
@@ -28,3 +28,5 @@ export const delUserChannelAPI = delUserChannel
 // search.js
 // 联想建议
 export const searchSuggestionAPI = searchSuggestion
+// 搜索结果
+export const searchResultAPI = searchResult
