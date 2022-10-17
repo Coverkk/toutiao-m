@@ -78,6 +78,9 @@ export default {
       }
     },
     highLight (suggestion) {
+      if (suggestion === null) {
+        return
+      }
       // 搜索文字高亮
       const htmlStr = `<span class="active">${this.searchText}</span>`
       //   正则表达式 // 中间的内容都会当中匹配字符来使用，而不是变量

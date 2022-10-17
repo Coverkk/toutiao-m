@@ -23,7 +23,7 @@
     <!-- 联想建议 -->
 
     <!-- 搜索历史记录 -->
-    <SearchHistory v-else></SearchHistory>
+    <SearchHistory v-else :searchHistorys="searchHistorys" @search="onSearch" @clearHistory="searchHistorys = []"></SearchHistory>
     <!-- 搜索历史记录 -->
 
   </div>
@@ -33,17 +33,31 @@
 import SearchHistory from './components/search-history.vue'
 import SearchSuggestion from './components/search-suggestion.vue'
 import SearchResult from './components/search-result.vue'
+import { setItem, getItem } from '@/utils/storage'
 export default {
   data () {
     return {
       searchText: '',
-      isResultShow: false // 控制搜索结果展示
+      isResultShow: false, // 控制搜索结果展示
+      searchHistorys: getItem('toutiao_search_historys') || []
     }
   },
   methods: {
     onSearch (text) {
-      this.isResultShow = true
+      //   更新文本框内容
       this.searchText = text
+      //   存储搜索历史记录
+      //   要求：不要用重复数据，最新的搜索记录放在最前面
+      //   检查这个搜索记录是否已经在历史记录中，在的话返回对应索引，否则返回-1
+      const index = this.searchHistorys.indexOf(text)
+      if (index !== -1) {
+        // 该记录已经存在历史记录，将其移除
+        this.searchHistorys.splice(index, 1)
+      }
+      //   将最新的记录放在最前面
+      this.searchHistorys.unshift(text)
+      //   渲染搜索结果
+      this.isResultShow = true
     },
     onCancel () {
       this.$router.back()
@@ -53,6 +67,12 @@ export default {
     SearchHistory,
     SearchSuggestion,
     SearchResult
+  },
+  watch: {
+    // 通过侦听器，侦听历史记录的变化，当其变化时，覆盖更新
+    searchHistorys (val) {
+      setItem('toutiao_search_historys', val)
+    }
   }
 }
 </script>

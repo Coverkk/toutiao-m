@@ -28,7 +28,7 @@ export default {
       loading: false,
       finished: false,
       page: 1, // 页码
-      error: false // 
+      error: false // 搜索失败状态
     }
   },
   methods: {
