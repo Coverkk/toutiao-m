@@ -19,7 +19,7 @@
     <!-- 搜索结果 -->
 
     <!-- 联想建议 -->
-    <SearchSuggestion v-else-if="searchText.trim()"></SearchSuggestion>
+    <SearchSuggestion :searchText="searchText" v-else-if="searchText.trim()"></SearchSuggestion>
     <!-- 联想建议 -->
 
     <!-- 搜索历史记录 -->
