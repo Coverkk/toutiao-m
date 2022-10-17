@@ -44,7 +44,7 @@
 <script>
 import { getUserChannelsAPI } from '@/api'
 import { mapState } from 'vuex'
-import { getItem } from '@/utils/storage'
+import { getItem, setItem } from '@/utils/storage'
 import ArticleList from './components/article-list.vue'
 import ChannelEdit from './components/channel-edit.vue'
 export default {
@@ -56,11 +56,20 @@ export default {
     }
   },
   // 组件初始化之后，获取用户频道列表
-  created () {
+  async created () {
     if (this.user) {
+      // 如果已登录，获取用户频道推荐列表
       this.getUserChannels()
     } else {
-      this.channels = getItem('toutiao_myChannels')
+      // 如果未登录，获取本地用户频道列表
+      if (getItem('toutiao_myChannels')) {
+        this.channels = getItem('toutiao_myChannels')
+      } else {
+        // 如果本地没有存储频道列表，获取线上统一的推荐频道
+        await this.getUserChannels()
+        // 且把获取到的频道列表存储进本地
+        setItem('toutiao_myChannels', this.channels)
+      }
     }
   },
   methods: {
