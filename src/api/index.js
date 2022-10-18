@@ -1,4 +1,4 @@
-import { login, sendSms, getUserInfo, getUserChannels } from './user'
+import { login, sendSms, getUserInfo, getUserChannels, followUser, cancelFollowUser } from './user'
 import { getChannelArticles, getArticleDetail } from './articles'
 import { getAllChannel, addUserChannel, delUserChannel } from './channel'
 import { searchSuggestion, searchResult } from './search'
@@ -12,6 +12,10 @@ export const sendSmsAPI = sendSms
 export const getUserInfoAPI = getUserInfo
 // 获取用户频道
 export const getUserChannelsAPI = getUserChannels
+// 关注用户
+export const followUserAPI = followUser
+// 取消关注
+export const cancelFollowUserAPI = cancelFollowUser
 
 // articles.js
 // 获取频道推荐新闻列表

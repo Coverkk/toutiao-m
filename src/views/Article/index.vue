@@ -36,24 +36,54 @@
           />
           <div slot="title" class="user-name">{{articleDetails.aut_name}}</div>
           <div slot="label" class="publish-date">{{articleDetails.pubdate | relativeTime}}</div>
+
+          <!--
+            模板中的 $event 是事件参数
+            当我们传递给子组件的数据既要使用，还要修改。
+                传递： props
+                  :is_followed="articleDetails.is_followed"
+                修改：自定义事件
+                  @onFollow="articleDetails.is_followed = $event"
+            简写方式：在组件上使用 v-model
+                value="articleDetails.is_followed"
+                @input="articleDetails.is_followed = $event"
+            如果需要修改 v-model 的规则名称，可以通过修改子组件的 model 属性来配置修改
+            一个组件上只能使用一次 v-model
+            如果有多个数据需要实现类型于 v-model 的效果，可以使用属性的 .sync 修饰符
+           -->
+          <!-- <FollowUser
+          :is_followed="articleDetails.is_followed"
+          :aut_id="articleDetails.aut_id"
+          @onFollow="onFollow"
+          class="follow-btn"></FollowUser> -->
+          <FollowUser
+          v-model="articleDetails.is_followed"
+          :aut_id="articleDetails.aut_id"
+          class="follow-btn"></FollowUser>
+          <!-- <van-button
+            v-if="articleDetails.is_followed"
+            :loading="following"
+            class="follow-btn"
+            round
+            size="small"
+            @click="onFollow()"
+          >已关注</van-button>
           <van-button
+            :loading="following"
+            v-else
             class="follow-btn"
             type="info"
             color="#3296fa"
             round
             size="small"
             icon="plus"
-          >关注</van-button>
-          <!-- <van-button
-            class="follow-btn"
-            round
-            size="small"
-          >已关注</van-button> -->
+            @click="onFollow()"
+          >关注</van-button> -->
         </van-cell>
         <!-- /用户信息 -->
 
         <!-- 文章内容 -->
-        <div class="article-content" v-html="articleDetails.content"></div>
+        <div class="article-content" ref="article_content" v-html="articleDetails.content"></div>
         <van-divider>正文结束</van-divider>
       </div>
       <!-- /加载完成-文章详情 -->
@@ -104,12 +134,15 @@
 <script>
 import './github-markdown.css'
 import { getArticleDetailAPI } from '@/api'
+import { ImagePreview } from 'vant'
+import FollowUser from '@/components/follow-user.vue'
 export default {
   data () {
     return {
       articleDetails: {}, // 文章详情
       loading: true, // 文章加载状态
-      status: 0
+      status: 0,
+      following: false
     }
   },
   props: {
@@ -131,6 +164,10 @@ export default {
         const { data: { data } } = await getArticleDetailAPI(this.articleId)
         // console.log(data)
         this.articleDetails = data // 保存文章详情
+        // 因为数据驱动视图，不是立即执行，需要延迟一点时间，才能获取到DOM
+        setTimeout(() => {
+          this.imagesPreview()
+        }, 0)
       } catch (error) {
         // 如果请求的资源不存在，设置状态为404
         if (error.response.status === 404) {
@@ -140,7 +177,36 @@ export default {
       }
       // 获取到文章详情或者失败，都要设置加载状态失效
       this.loading = false
+    },
+    imagesPreview () {
+      // 图片点击预览
+      // 获取到文章内容的DOM
+      const articleContent = this.$refs.article_content
+      // console.log(articleContent)
+      // 获取到文章内容里面的所有img  DOM
+      const img = articleContent.querySelectorAll('img')
+      // 定义存储img地址的数组
+      const images = []
+      img.forEach((img, index) => {
+        // 将img的图片地址，存到images数组中
+        images.push(img.src)
+        // 给每个img标签添加点击事件,处理图片预览
+        img.addEventListener('click', () => {
+          ImagePreview({
+            images,
+            startPosition: index
+          })
+        })
+      })
+      // console.log(images)
+    },
+    onFollow (isFollow) {
+      // 更新关注状态
+      this.articleDetails.is_followed = isFollow
     }
+  },
+  components: {
+    FollowUser
   }
 }
 </script>
