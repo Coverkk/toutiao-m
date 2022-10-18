@@ -85,6 +85,32 @@
         <!-- 文章内容 -->
         <div class="article-content" ref="article_content" v-html="articleDetails.content"></div>
         <van-divider>正文结束</van-divider>
+        <!-- 底部区域 -->
+        <div class="article-bottom">
+        <van-button
+            class="comment-btn"
+            type="default"
+            round
+            size="small"
+        >写评论</van-button>
+        <van-icon
+            name="comment-o"
+            info="123"
+            color="#777"
+        />
+        <CollectArticle v-model="articleDetails.is_collected" :artId="articleDetails.art_id"></CollectArticle>
+        <!-- <van-icon
+            color="#777"
+            name="star-o"
+        /> -->
+        <!-- <van-icon
+            color="#777"
+            name="good-job-o"
+        /> -->
+        <LikeArticle v-model="articleDetails.attitude" :artId="articleDetails.art_id"></LikeArticle>
+        <van-icon name="share" color="#777777"></van-icon>
+        </div>
+        <!-- /底部区域 -->
       </div>
       <!-- /加载完成-文章详情 -->
 
@@ -104,30 +130,6 @@
       <!-- /加载失败：其它未知错误（例如网络原因或服务端异常） -->
     </div>
 
-    <!-- 底部区域 -->
-    <div class="article-bottom">
-      <van-button
-        class="comment-btn"
-        type="default"
-        round
-        size="small"
-      >写评论</van-button>
-      <van-icon
-        name="comment-o"
-        info="123"
-        color="#777"
-      />
-      <van-icon
-        color="#777"
-        name="star-o"
-      />
-      <van-icon
-        color="#777"
-        name="good-job-o"
-      />
-      <van-icon name="share" color="#777777"></van-icon>
-    </div>
-    <!-- /底部区域 -->
   </div>
 </template>
 
@@ -136,6 +138,8 @@ import './github-markdown.css'
 import { getArticleDetailAPI } from '@/api'
 import { ImagePreview } from 'vant'
 import FollowUser from '@/components/follow-user.vue'
+import CollectArticle from '@/components/collect-article.vue'
+import LikeArticle from '@/components/like-article.vue'
 export default {
   data () {
     return {
@@ -151,9 +155,9 @@ export default {
       required: true
     }
   },
-  created () {
+  async created () {
     // 在组件初始化之后，获取新闻文章详情
-    this.loadArticle()
+    await this.loadArticle()
   },
   methods: {
     async loadArticle () {
@@ -203,10 +207,18 @@ export default {
     onFollow (isFollow) {
       // 更新关注状态
       this.articleDetails.is_followed = isFollow
+    },
+    input (val) {
+      this.articleDetails.is_collected = val
+    },
+    like (val) {
+      this.articleDetails.attitude = val
     }
   },
   components: {
-    FollowUser
+    FollowUser,
+    CollectArticle,
+    LikeArticle
   }
 }
 </script>

@@ -1,5 +1,5 @@
 import { login, sendSms, getUserInfo, getUserChannels, followUser, cancelFollowUser } from './user'
-import { getChannelArticles, getArticleDetail } from './articles'
+import { getChannelArticles, getArticleDetail, collectArticle, cancelCollectArticle, likeArticle, cancelLike } from './articles'
 import { getAllChannel, addUserChannel, delUserChannel } from './channel'
 import { searchSuggestion, searchResult } from './search'
 
@@ -22,6 +22,14 @@ export const cancelFollowUserAPI = cancelFollowUser
 export const getChannelArticlesAPI = getChannelArticles
 // 获取新闻文章详情
 export const getArticleDetailAPI = getArticleDetail
+// 收藏文章
+export const collectArticleAPI = collectArticle
+// 取消收藏文章
+export const cancelCollectArticleAPI = cancelCollectArticle
+// 对文章点赞
+export const likeArticleAPI = likeArticle
+// 取消点赞
+export const cancelLikeAPI = cancelLike
 
 // channel.js
 // 获取所有频道列表
