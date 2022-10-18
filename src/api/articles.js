@@ -7,3 +7,10 @@ export const getChannelArticles = params => {
     params
   })
 }
+
+// 获取新闻文章详情
+export const getArticleDetail = articleId => {
+  return request({
+    url: `/v1_0/articles/${articleId}` // 字符串拼接，对象自动转为字符串
+  })
+}

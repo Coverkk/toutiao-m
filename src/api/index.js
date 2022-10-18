@@ -1,5 +1,5 @@
 import { login, sendSms, getUserInfo, getUserChannels } from './user'
-import { getChannelArticles } from './articles'
+import { getChannelArticles, getArticleDetail } from './articles'
 import { getAllChannel, addUserChannel, delUserChannel } from './channel'
 import { searchSuggestion, searchResult } from './search'
 
@@ -16,6 +16,8 @@ export const getUserChannelsAPI = getUserChannels
 // articles.js
 // 获取频道推荐新闻列表
 export const getChannelArticlesAPI = getChannelArticles
+// 获取新闻文章详情
+export const getArticleDetailAPI = getArticleDetail
 
 // channel.js
 // 获取所有频道列表
