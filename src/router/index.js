@@ -7,6 +7,7 @@ import Video from '@/views/Video'
 import Qa from '@/views/Qa'
 import My from '@/views/My'
 import Search from '@/views/Search'
+import Article from '@/views/Article'
 
 Vue.use(VueRouter)
 
@@ -55,6 +56,13 @@ const routes = [
     path: '/search',
     name: 'search',
     component: Search
+  },
+  {
+    path: '/article/:articleId', // 动态路由，根据文章id跳转不同路由
+    name: 'article',
+    component: Article,
+    props: true // 允许将参数作为 props 传递给由 router-view 渲染的组件。当传递给一个多视图记录时，它应该是一个与组件具有相同键的对象，或者是一个应用于每个组件的布尔值。
+    // 开启 props 传参，说白了就是把路由参数映射打组件的 props 数据中
   }
 ]
 
