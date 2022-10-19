@@ -2,6 +2,7 @@ import { login, sendSms, getUserInfo, getUserChannels, followUser, cancelFollowU
 import { getChannelArticles, getArticleDetail, collectArticle, cancelCollectArticle, likeArticle, cancelLike } from './articles'
 import { getAllChannel, addUserChannel, delUserChannel } from './channel'
 import { searchSuggestion, searchResult } from './search'
+import { getCommentList } from './comment'
 
 // user.js
 // 用户登录接口
@@ -44,3 +45,7 @@ export const delUserChannelAPI = delUserChannel
 export const searchSuggestionAPI = searchSuggestion
 // 搜索结果
 export const searchResultAPI = searchResult
+
+// comment.js
+// 获取评论列表
+export const getCommentListAPI = getCommentList

@@ -95,7 +95,7 @@
         >写评论</van-button>
         <van-icon
             name="comment-o"
-            info="123"
+            :badge="commentTotalCount"
             color="#777"
         />
         <CollectArticle v-model="articleDetails.is_collected" :artId="articleDetails.art_id"></CollectArticle>
@@ -111,6 +111,7 @@
         <van-icon name="share" color="#777777"></van-icon>
         </div>
         <!-- /底部区域 -->
+        <CommentList :artId="articleDetails.art_id" @onload-success="getCommentData"></CommentList>
       </div>
       <!-- /加载完成-文章详情 -->
 
@@ -140,13 +141,15 @@ import { ImagePreview } from 'vant'
 import FollowUser from '@/components/follow-user.vue'
 import CollectArticle from '@/components/collect-article.vue'
 import LikeArticle from '@/components/like-article.vue'
+import CommentList from './components/comment-list.vue'
 export default {
   data () {
     return {
       articleDetails: {}, // 文章详情
       loading: true, // 文章加载状态
       status: 0,
-      following: false
+      following: false,
+      commentTotalCount: 0 // 文章评论总数量
     }
   },
   props: {
@@ -213,12 +216,18 @@ export default {
     },
     like (val) {
       this.articleDetails.attitude = val
+    },
+    getCommentData (comData) {
+      // 获取文章评论数据
+      // 获取评论总数量
+      this.commentTotalCount = comData.total_count
     }
   },
   components: {
     FollowUser,
     CollectArticle,
-    LikeArticle
+    LikeArticle,
+    CommentList
   }
 }
 </script>
