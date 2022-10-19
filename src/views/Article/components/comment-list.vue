@@ -5,10 +5,16 @@
   finished-text="没有更多了"
   @load="onLoad"
   :error.sync="error"
+  :immediate-check="false"
   error-text="加载失败，请点击重试"
   >
     <!-- <van-cell v-for="comment in list" :key="comment.com_id" :title="comment.content" /> -->
-    <CommentItem v-for="(comment, index) in list" :key="comment.com_id" :comment="comment" :index="index" @commentLiking="commentLiking"></CommentItem>
+    <CommentItem
+    v-for="(comment, index) in list"
+    :key="comment.com_id" :comment="comment"
+    :index="index"
+    @commentLiking="commentLiking"
+    @reply-click="$emit('reply-click', $event)"></CommentItem>
   </van-list>
 </template>
 
@@ -35,10 +41,21 @@ export default {
     list: {
       type: Array,
       default: () => []
+    },
+    type: {
+      type: String,
+      // 自定义 props 数据验证
+      validator (val) {
+        return ['a', 'c'].includes(val)
+      },
+      default: 'a'
     }
   },
   created () {
     // 组件初始化之后，立即获取评论总数量
+    // 手动初始 onLoad 的话，不会自动开始初始的 loading
+    // 所以需要手动开启初始 loading
+    this.loading = true
     this.onLoad()
   },
   methods: {
@@ -49,8 +66,8 @@ export default {
       // 获取文章评论
       try {
         const { data: { data } } = await getCommentListAPI({
-          type: 'a', // 评论类型，a-对文章(article)的评论，c-对评论(comment)的回复
-          source: this.artId, // 源id，文章id或评论id
+          type: this.type, // 评论类型，a-对文章(article)的评论，c-对评论(comment)的回复
+          source: this.artId.toString(), // 源id，文章id或评论id
           offset: this.offset, // 获取评论数据的偏移量，值为评论id，表示从此id的数据向后取，不传表示从第一页开始读取数据
           limit: this.limit // 获取的评论数据个数，不传表示采用后端服务设定的默认每页数据量
         })

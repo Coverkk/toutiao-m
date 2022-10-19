@@ -121,7 +121,8 @@
         :artId="articleDetails.art_id"
         @onload-success="getCommentData"
         :list="commentList"
-        @commentLiking="onCommentLiking"></CommentList>
+        @commentLiking="onCommentLiking"
+        @reply-click="onReply"></CommentList>
         <!-- 评论列表 -->
         <!-- 评论弹出层 -->
         <van-popup
@@ -150,6 +151,29 @@
       <!-- /加载失败：其它未知错误（例如网络原因或服务端异常） -->
     </div>
 
+    <!-- 回复评论弹出层 -->
+    <!--
+      因为 popup 弹出层，默认是懒加载的，只有在第一次展示的时候，才会渲染里面的内容，后面都是在显示和隐藏之间进行切换
+      这就造成一个问题，弹出层懒加载，里面的组件也不会被销毁，点击回复评论，弹出的都是同一个 CommentReply 组件，所以里面的数据也不会改变
+      这就导致，查看的所有回复，都是一样的，不会重新加载其他评论的回复
+      解决这个问题，就需要在每次 弹出层关闭 时，销毁组件，下次弹出再重新渲染组件
+      用 v-if 就可以解决
+        true 创建组件，并渲染
+        false 销毁组件
+     -->
+    <van-popup
+    v-model="isReplyShow"
+    position="bottom"
+    style="height:90%"
+    >
+      <CommentReply
+      :currentComment="currentComment"
+      @close="isReplyShow = false"
+      v-if="isReplyShow"
+      @replySuccess="onReplySuccess">
+      </CommentReply>
+    </van-popup>
+    <!-- 回复评论弹出层 -->
   </div>
 </template>
 
@@ -162,6 +186,7 @@ import CollectArticle from '@/components/collect-article.vue'
 import LikeArticle from '@/components/like-article.vue'
 import CommentList from './components/comment-list.vue'
 import CommentPost from './components/comment-post.vue'
+import CommentReply from './components/comment-reply.vue'
 export default {
   data () {
     return {
@@ -171,13 +196,21 @@ export default {
       following: false,
       commentTotalCount: 0, // 文章评论总数量
       isPostShow: false, // 控制评论弹出层显示
-      commentList: [] // 评论列表
+      commentList: [], // 评论列表
+      isReplyShow: false, // 控制回复评论弹出层显示
+      currentComment: {} // 当前回复的评论
     }
   },
   props: {
     articleId: {
       type: [Number, String, Object],
       required: true
+    }
+  },
+  // 给所有后代组件提供数据
+  provide: function () {
+    return {
+      artId: this.articleId
     }
   },
   async created () {
@@ -265,6 +298,21 @@ export default {
         // 取消点赞，点赞数 -1
         this.commentList[index].like_count -= 1
       }
+    },
+    onReply (comment) {
+      // 回复评论
+      // 弹出回复评论弹出层
+      this.isReplyShow = true
+      // console.log(comment)
+      // 将当前评论，传递给回复评论的组件
+      this.currentComment = comment
+    },
+    onReplySuccess (commentId) {
+      // 回复评论成功，回复总数+1
+      // 获取到回复的评论对应的索引
+      const index = this.commentList.findIndex(com => com.com_id === commentId)
+      // 根据索引，找到对应评论，并将回复总数+1
+      this.commentList[index].reply_count += 1
     }
   },
   components: {
@@ -272,7 +320,8 @@ export default {
     CollectArticle,
     LikeArticle,
     CommentList,
-    CommentPost
+    CommentPost,
+    CommentReply
   }
 }
 </script>

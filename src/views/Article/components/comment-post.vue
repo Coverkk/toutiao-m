@@ -14,15 +14,25 @@ export default {
       content: ''
     }
   },
+  inject: {
+    artId: {
+      type: [Number, String, Object],
+      default: null
+    }
+  },
   props: {
     target: {
       type: [Number, String, Object],
       required: true
     },
-    isPostArticleComment: {
+    isPostArticleComment: { // 判断是评论文章，还是回复评论 true为评论文章，false为回复评论
       type: Boolean,
       required: true
     }
+    // artId: {
+    //   type: [Number, String, Object],
+    //   default: null
+    // }
   },
   methods: {
     async postComment () {
@@ -33,9 +43,9 @@ export default {
       })
       try {
         const { data: { data: { new_obj: newComment } } } = await postCommentAPI({
-          target: this.target, // 评论的目标id（评论文章即为文章id，对评论进行回复则为评论id）
+          target: this.target.toString(), // 评论的目标id（评论文章即为文章id，对评论进行回复则为评论id）
           content: this.content, // 评论内容
-          art_id: this.isPostArticleComment ? null : this.target // 文章id，对评论内容发表回复时，需要传递此参数，表明所属文章id。对文章进行评论，不要传此参数。
+          art_id: this.isPostArticleComment ? null : this.artId.toString() // 文章id，对评论内容发表回复时，需要传递此参数，表明所属文章id。对文章进行评论，不要传此参数。
         })
         this.$toast.success({
           message: '发布评论成功',
