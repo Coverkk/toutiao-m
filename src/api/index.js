@@ -2,7 +2,7 @@ import { login, sendSms, getUserInfo, getUserChannels, followUser, cancelFollowU
 import { getChannelArticles, getArticleDetail, collectArticle, cancelCollectArticle, likeArticle, cancelLike } from './articles'
 import { getAllChannel, addUserChannel, delUserChannel } from './channel'
 import { searchSuggestion, searchResult } from './search'
-import { getCommentList } from './comment'
+import { getCommentList, goodJob, cancelGoodJob } from './comment'
 
 // user.js
 // 用户登录接口
@@ -49,3 +49,7 @@ export const searchResultAPI = searchResult
 // comment.js
 // 获取评论列表
 export const getCommentListAPI = getCommentList
+// 对评论点赞
+export const goodJobAPI = goodJob
+// 取消对评论点赞
+export const cancelGoodJobAPI = cancelGoodJob

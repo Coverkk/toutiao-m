@@ -7,12 +7,14 @@
   :error.sync="error"
   error-text="加载失败，请点击重试"
   >
-    <van-cell v-for="comment in list" :key="comment.com_id" :title="comment.content" />
+    <!-- <van-cell v-for="comment in list" :key="comment.com_id" :title="comment.content" /> -->
+    <CommentItem v-for="(comment, index) in list" :key="comment.com_id" :comment="comment" :index="index" @commentLiking="commentLiking"></CommentItem>
   </van-list>
 </template>
 
 <script>
 import { getCommentListAPI } from '@/api'
+import CommentItem from './comment-item.vue'
 export default {
   data () {
     return {
@@ -70,7 +72,21 @@ export default {
         this.error = true
         this.loading = false
       }
+    },
+    commentLiking (isLiking, index) {
+      // 评论点赞事件
+      this.list[index].is_liking = isLiking
+      if (isLiking) {
+        // 点赞，点赞数+1
+        this.list[index].like_count += 1
+      } else {
+        // 取消点赞，点赞数 -1
+        this.list[index].like_count -= 1
+      }
     }
+  },
+  components: {
+    CommentItem
   }
 }
 </script>

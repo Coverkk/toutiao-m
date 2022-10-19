@@ -7,3 +7,22 @@ export const getCommentList = params => {
     params
   })
 }
+
+// 对评论点赞
+export const goodJob = target => {
+  return request({
+    method: 'POST',
+    url: '/v1_0/comment/likings',
+    data: {
+      target
+    }
+  })
+}
+
+// 取消对评论的点赞
+export const cancelGoodJob = target => {
+  return request({
+    method: 'DELETE',
+    url: `/v1_0/comment/likings/${target}`
+  })
+}
