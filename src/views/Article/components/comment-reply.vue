@@ -52,10 +52,6 @@ export default {
     currentComment: {
       type: Object,
       required: true
-    },
-    artId: {
-      type: [Number, String, Object],
-      required: true
     }
   },
   components: {
