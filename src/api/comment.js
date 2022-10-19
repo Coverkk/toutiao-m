@@ -26,3 +26,12 @@ export const cancelGoodJob = target => {
     url: `/v1_0/comment/likings/${target}`
   })
 }
+
+// 对文章或者评论进行评论
+export const postComment = data => {
+  return request({
+    method: 'POST',
+    url: '/v1_0/comments',
+    data
+  })
+}

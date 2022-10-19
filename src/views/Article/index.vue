@@ -88,17 +88,20 @@
         <!-- 底部区域 -->
         <div class="article-bottom">
         <van-button
-            class="comment-btn"
-            type="default"
-            round
-            size="small"
+        class="comment-btn"
+        type="default"
+        round
+        size="small"
+        @click="isPostShow = true"
         >写评论</van-button>
         <van-icon
             name="comment-o"
             :badge="commentTotalCount"
             color="#777"
         />
+        <!-- 收藏文章 -->
         <CollectArticle v-model="articleDetails.is_collected" :artId="articleDetails.art_id"></CollectArticle>
+        <!-- 收藏文章 -->
         <!-- <van-icon
             color="#777"
             name="star-o"
@@ -107,11 +110,27 @@
             color="#777"
             name="good-job-o"
         /> -->
+        <!-- 点赞文章 -->
         <LikeArticle v-model="articleDetails.attitude" :artId="articleDetails.art_id"></LikeArticle>
+        <!-- 点赞文章 -->
         <van-icon name="share" color="#777777"></van-icon>
         </div>
         <!-- /底部区域 -->
-        <CommentList :artId="articleDetails.art_id" @onload-success="getCommentData"></CommentList>
+        <!-- 评论列表 -->
+        <CommentList
+        :artId="articleDetails.art_id"
+        @onload-success="getCommentData"
+        :list="commentList"
+        @commentLiking="onCommentLiking"></CommentList>
+        <!-- 评论列表 -->
+        <!-- 评论弹出层 -->
+        <van-popup
+        v-model="isPostShow"
+        position="bottom"
+        >
+        <CommentPost :target="articleDetails.art_id" :is-post-article-comment="true" @postSuccess="onPostSuccess"></CommentPost>
+        </van-popup>
+        <!-- 评论弹出层 -->
       </div>
       <!-- /加载完成-文章详情 -->
 
@@ -142,6 +161,7 @@ import FollowUser from '@/components/follow-user.vue'
 import CollectArticle from '@/components/collect-article.vue'
 import LikeArticle from '@/components/like-article.vue'
 import CommentList from './components/comment-list.vue'
+import CommentPost from './components/comment-post.vue'
 export default {
   data () {
     return {
@@ -149,7 +169,9 @@ export default {
       loading: true, // 文章加载状态
       status: 0,
       following: false,
-      commentTotalCount: 0 // 文章评论总数量
+      commentTotalCount: 0, // 文章评论总数量
+      isPostShow: false, // 控制评论弹出层显示
+      commentList: [] // 评论列表
     }
   },
   props: {
@@ -221,13 +243,36 @@ export default {
       // 获取文章评论数据
       // 获取评论总数量
       this.commentTotalCount = comData.total_count
+      // 获取评论列表
+      this.commentList.push(...comData.results)
+    },
+    onPostSuccess (newComment) {
+      // 评论发表成功
+      // 关闭弹出层
+      this.isPostShow = false
+      // 将新发的评论，放到最前面
+      this.commentList.unshift(newComment)
+      // 评论总数+1
+      this.commentTotalCount += 1
+    },
+    onCommentLiking (isLiking, index) {
+      // 评论点赞事件
+      this.commentList[index].is_liking = isLiking
+      if (isLiking) {
+        // 点赞，点赞数+1
+        this.commentList[index].like_count += 1
+      } else {
+        // 取消点赞，点赞数 -1
+        this.commentList[index].like_count -= 1
+      }
     }
   },
   components: {
     FollowUser,
     CollectArticle,
     LikeArticle,
-    CommentList
+    CommentList,
+    CommentPost
   }
 }
 </script>

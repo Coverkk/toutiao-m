@@ -18,7 +18,7 @@ import CommentItem from './comment-item.vue'
 export default {
   data () {
     return {
-      list: [], // 评论列表
+      // list: [], // 评论列表
       loading: false,
       finished: false,
       offset: null,
@@ -31,6 +31,10 @@ export default {
     artId: {
       type: [Number, String, Object],
       required: true
+    },
+    list: {
+      type: Array,
+      default: () => []
     }
   },
   created () {
@@ -58,7 +62,7 @@ export default {
         this.commentData = data
         // console.log(data)
         this.$emit('onload-success', data)
-        this.list.push(...data.results)
+        // this.list.push(...data.results)
         this.loading = false
         if (data.results.length === this.limit) {
           // 获取到的评论数组长度等于 limit 说明后续还有数据
@@ -74,15 +78,7 @@ export default {
       }
     },
     commentLiking (isLiking, index) {
-      // 评论点赞事件
-      this.list[index].is_liking = isLiking
-      if (isLiking) {
-        // 点赞，点赞数+1
-        this.list[index].like_count += 1
-      } else {
-        // 取消点赞，点赞数 -1
-        this.list[index].like_count -= 1
-      }
+      this.$emit('commentLiking', isLiking, index)
     }
   },
   components: {
