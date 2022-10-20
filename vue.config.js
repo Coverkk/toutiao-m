@@ -1,6 +1,7 @@
 // vue脚手架项目 - 默认的配置文件名
 const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
+  publicPath: './',
   transpileDependencies: true,
   lintOnSave: false,
   devServer: {

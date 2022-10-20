@@ -2506,6 +2506,11 @@ cosmiconfig@^7.0.0, cosmiconfig@^7.0.1:
     path-type "^4.0.0"
     yaml "^1.10.0"
 
+cropperjs@^1.5.12:
+  version "1.5.12"
+  resolved "https://registry.yarnpkg.com/cropperjs/-/cropperjs-1.5.12.tgz#d9c0db2bfb8c0d769d51739e8f916bbc44e10f50"
+  integrity sha512-re7UdjE5UnwdrovyhNzZ6gathI4Rs3KGCBSc8HCIjUo5hO42CtzyblmWLj6QWVw7huHyDMfpKxhiO2II77nhDw==
+
 cross-spawn@^5.0.1:
   version "5.1.0"
   resolved "https://registry.npmmirror.com/cross-spawn/-/cross-spawn-5.1.0.tgz#e8bd0efee58fcff6f8f94510a0a554bbfa235449"
@@ -6389,10 +6394,10 @@ validate-npm-package-license@^3.0.1:
     spdx-correct "^3.0.0"
     spdx-expression-parse "^3.0.0"
 
-vant@^2.12.50:
-  version "2.12.50"
-  resolved "https://registry.yarnpkg.com/vant/-/vant-2.12.50.tgz#ee507a337e6e00b18acbf174cfaf1c5e2f527a88"
-  integrity sha512-WKm+oc2pUh+spTzK6uCviHmOuZwuLOjg2bYmUFNJGbGPlcPFkGzOl32NR/SP4rBvGopA6s32Mkp2key46qNOzA==
+vant@^2.12.51:
+  version "2.12.51"
+  resolved "https://registry.yarnpkg.com/vant/-/vant-2.12.51.tgz#b5a9193cecb6808716993346b46fbfb46c4b7895"
+  integrity sha512-0dZHcBWwKdQvgvAMr5hqObuwkHRn51c7ReLVDV/Ijp1twZ/9/JGMPKVCp1ebpzFAONudyDvu42adrkFUhheaUA==
   dependencies:
     "@babel/runtime" "7.x"
     "@vant/icons" "^1.7.1"

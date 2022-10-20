@@ -70,3 +70,12 @@ export const editUserProfile = data => {
     data
   })
 }
+
+// 修改用户头像
+export const updatePhoto = data => {
+  return request({
+    method: 'PATCH',
+    url: '/v1_0/user/photo',
+    data
+  })
+}
