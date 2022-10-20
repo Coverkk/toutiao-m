@@ -12,7 +12,7 @@
 
     <div class="scroll-wrap">
       <!-- 当前评论 -->
-      <CommentItem :comment="currentComment"></CommentItem>
+      <CommentItem :comment="currentComment" @commentLiking="commentLiking"></CommentItem>
       <!-- 当前评论 -->
       <!-- 评论回复列表 -->
       <van-cell title="全部回复"></van-cell>
@@ -67,10 +67,11 @@ export default {
       // 获取到评论回复列表
       this.replyList = data.results
     },
-    replyLiking (isLiking, index) {
+    replyLiking (comment) {
       // 更新回复评论的点赞
-      this.replyList[index].is_liking = isLiking
-      if (isLiking) {
+      const index = this.replyList.findIndex(com => com === comment)
+      this.replyList[index].is_liking = !comment.is_liking
+      if (comment.is_liking) {
         // 点赞，点赞数+1
         this.replyList[index].like_count += 1
       } else {
@@ -85,6 +86,10 @@ export default {
       this.$emit('replySuccess', this.currentComment.com_id)
       // 关闭弹出层
       this.isReplyShow = false
+    },
+    commentLiking (comment) {
+      // 对评论进行点赞，状态同步
+      this.$emit('commentLiking', comment)
     }
   }
 }

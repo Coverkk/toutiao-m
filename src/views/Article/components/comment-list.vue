@@ -94,8 +94,8 @@ export default {
         this.loading = false
       }
     },
-    commentLiking (isLiking, index) {
-      this.$emit('commentLiking', isLiking, index)
+    commentLiking (comment) {
+      this.$emit('commentLiking', comment)
     }
   },
   components: {

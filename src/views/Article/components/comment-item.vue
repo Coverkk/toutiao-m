@@ -59,7 +59,8 @@ export default {
           duration: 500
         })
         // this.this.comment.is_liking = !this.this.comment.is_liking
-        this.$emit('commentLiking', !this.comment.is_liking, this.index)
+        // this.$emit('commentLiking', !this.comment.is_liking, this.index)
+        this.$emit('commentLiking', this.comment)
       } catch (error) {
         console.log(error)
         this.$toast.fail({

@@ -170,7 +170,8 @@
       :currentComment="currentComment"
       @close="isReplyShow = false"
       v-if="isReplyShow"
-      @replySuccess="onReplySuccess">
+      @replySuccess="onReplySuccess"
+      @commentLiking="onCommentLiking">
       </CommentReply>
     </van-popup>
     <!-- 回复评论弹出层 -->
@@ -288,10 +289,13 @@ export default {
       // 评论总数+1
       this.commentTotalCount += 1
     },
-    onCommentLiking (isLiking, index) {
+    onCommentLiking (comment) {
       // 评论点赞事件
-      this.commentList[index].is_liking = isLiking
-      if (isLiking) {
+      const index = this.commentList.findIndex(com => com === comment)
+      // const isLiking = !comment.is_liking
+      this.commentList[index].is_liking = !comment.is_liking
+      // 因为commentList[index] 和 comment共用一份数据，所以在 this.commentList[index].is_liking 的值修改之后， comment.is_liking 也会跟着变
+      if (comment.is_liking) {
         // 点赞，点赞数+1
         this.commentList[index].like_count += 1
       } else {
